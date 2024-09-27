@@ -3,9 +3,8 @@ import logo from "../assets/logo.png";
 import Product from "./Product";
 import {
   handleDragOver,
-  handleOnDropVariants,
-  handleOnDropProducts,
   handleDragStart,
+  handleOnDrop,
 } from "../utils/helpers";
 
 function ProductList() {
@@ -31,7 +30,7 @@ function ProductList() {
   };
 
   // console.log("selected products", selectedProducts);
-  console.log("added products", addedProducts);
+  // console.log("added products", addedProducts);
 
   return (
     <div>
@@ -63,12 +62,14 @@ function ProductList() {
                   }
                   onDragOver={(e) => handleDragOver(draggedIndex, index, e)}
                   onDrop={() =>
-                    handleOnDropProducts(
+                    handleOnDrop(
+                      product,
                       index,
                       draggedIndex,
                       addedProducts,
                       setAddedProducts,
-                      setDraggedIndex
+                      setDraggedIndex,
+                      false
                     )
                   }
                 >

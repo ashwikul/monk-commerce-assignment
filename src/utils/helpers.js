@@ -6,55 +6,46 @@ export const handleDragStart = (setDraggedSubIndex, index, e) => {
 
 export const handleDragOver = (draggedIndex, index, event) => {
   event.preventDefault();
-
-  // Set the dropEffect to "move" to prevent the "+" symbol (copy icon) from appearing
-  // event.dataTransfer.dropEffect = "move";
-
   // If the item is dragged over itself, ignore
   if (draggedIndex === index) {
     return;
   }
 };
 
-// utils/dragDropHelpers.js
-export const handleOnDropVariants = (
+export const handleOnDrop = (
   product,
   index,
   draggedIndex,
   addedProducts,
-  setAddedProducts
+  setAddedProducts,
+  setDraggedIndex,
+  isVariant = false // Pass a flag to indicate whether you're handling variants or products
 ) => {
   // Create a new items array
   const newItems = [...addedProducts];
-  const variantsList = newItems.find((p) => p.id === product.id).variants;
 
-  // Remove the dragged item from its original position
-  const [draggedItem] = variantsList.splice(draggedIndex, 1);
+  // Determine if we're working with products or variants
+  let draggedItem;
 
-  // Insert the dragged item at the new index
-  variantsList.splice(index, 0, draggedItem);
+  if (isVariant) {
+    const variantsList = newItems.find((p) => p.id === product.id).variants;
 
-  // Update the state with the new order
-  setAddedProducts(newItems);
-};
+    // Remove the dragged variant from its original position
+    [draggedItem] = variantsList.splice(draggedIndex, 1);
 
-export const handleOnDropProducts = (
-  index,
-  draggedIndex,
-  addedProducts,
-  setAddedProducts,
-  setDraggedIndex
-) => {
-  // Create a new items array
-  const newItems = [...addedProducts]; // Create a copy of the current array
+    // Insert the dragged variant at the new index
+    variantsList.splice(index, 0, draggedItem);
+  } else {
+    // Remove the dragged product from its original position
+    [draggedItem] = newItems.splice(draggedIndex, 1);
 
-  // Remove the dragged item from its original position
-  const [draggedItem] = newItems.splice(draggedIndex, 1);
-
-  // Insert the dragged item at the new index
-  newItems.splice(index, 0, draggedItem);
+    // Insert the dragged product at the new index
+    newItems.splice(index, 0, draggedItem);
+  }
 
   // Update the state with the new order
   setAddedProducts(newItems);
+
+  // Reset dragged index
   setDraggedIndex(null);
 };

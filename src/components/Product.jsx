@@ -6,6 +6,11 @@ import carret from "../assets/carret.svg";
 import ProductPicker from "./ProductPicker";
 import show from "../assets/show.svg";
 import Variant from "./Variant";
+import {
+  handleDragOver,
+  handleDragStart,
+  handleOnDrop,
+} from "../utils/helpers";
 
 function Product({
   index,
@@ -19,6 +24,7 @@ function Product({
 }) {
   const [productPicker, setProductPicker] = useState(false);
   const [variantsExpanded, setVariantsExpanded] = useState(false);
+  const [draggedSubIndex, setDraggedSubIndex] = useState(null);
 
   const updateDiscount = (product, value) => {
     const list = [...addedProducts];
@@ -165,7 +171,23 @@ function Product({
       {variantsExpanded && product?.variants && (
         <ul className="ml-10">
           {product.variants.map((variant, index) => (
-            <li key={index}>
+            <li
+              key={index}
+              draggable
+              onDragStart={(e) => handleDragStart(setDraggedSubIndex, index, e)}
+              onDragOver={(e) => handleDragOver(draggedSubIndex, index, e)}
+              onDrop={() =>
+                handleOnDrop(
+                  product,
+                  index,
+                  draggedSubIndex,
+                  addedProducts,
+                  setAddedProducts,
+                  setDraggedSubIndex,
+                  true
+                )
+              }
+            >
               <Variant
                 key={variant.id}
                 variant={variant}

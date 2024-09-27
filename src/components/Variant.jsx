@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import dots from "../assets/dots.svg";
-import edit from "../assets/edit.svg";
 import close from "../assets/close.svg";
 
 function Variant({ variant, product, addedProducts, setAddedProducts }) {
