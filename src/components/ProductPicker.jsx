@@ -283,7 +283,7 @@ function ProductPicker({
                     type="checkbox"
                     checked={product.checked || false}
                     className="accent-[#008060] w-6 h-6"
-                    onChange={() => updateProductChecked(product)}
+                    readOnly
                   />
                   {product.image.src ? (
                     <img
@@ -316,9 +316,7 @@ function ProductPicker({
                               type="checkbox"
                               className=" accent-[#008060] w-6 h-6"
                               checked={variant.checked || false}
-                              onChange={() =>
-                                updateVariantChecked(variant, product)
-                              }
+                              readOnly
                             />
                             <p> {variant.title}</p>
                           </div>
