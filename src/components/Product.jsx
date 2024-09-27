@@ -3,6 +3,7 @@ import dots from "../assets/dots.svg";
 import edit from "../assets/edit.svg";
 import close from "../assets/close.svg";
 import carret from "../assets/carret.svg";
+import ProductPicker from "./ProductPicker";
 
 function Product({ index, order }) {
   const [productPicker, setProductPicker] = useState(false);
@@ -31,7 +32,7 @@ function Product({ index, order }) {
           Add Discount
         </button>
 
-        {productPicker && <div>product picker component</div>}
+        {productPicker && <ProductPicker setProductPicker={setProductPicker} />}
       </div>
     </div>
   );
