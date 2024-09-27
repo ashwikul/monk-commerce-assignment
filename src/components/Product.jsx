@@ -116,12 +116,14 @@ function Product({
                 flat off
               </option>
             </select>
-            <img
-              src={close}
-              width={11.67}
-              height={11.67}
-              onClick={() => handleDelete(product)}
-            />
+            {addedProducts.length > 1 && (
+              <img
+                src={close}
+                width={11.67}
+                height={11.67}
+                onClick={() => handleDelete(product)}
+              />
+            )}
           </div>
         ) : (
           <button
