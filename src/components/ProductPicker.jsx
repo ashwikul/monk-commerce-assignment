@@ -59,6 +59,14 @@ function ProductPicker({ setProductPicker }) {
 
   console.log("productsList", productsList);
 
+  const debounceSearch = (callback, delay) => {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => callback.apply(this, args), delay);
+    };
+  };
+
   const handleSearch = (value) => {
     console.log("search text", value);
     setSearchText(value);
@@ -66,6 +74,8 @@ function ProductPicker({ setProductPicker }) {
     setProductsList([]);
     !isLoading && fetchData(value, 0);
   };
+
+  const debouncedSearch = debounceSearch(handleSearch, 500);
 
   const handleScroll = () => {
     const productPicker = document.getElementById("product_picker");
@@ -105,7 +115,7 @@ function ProductPicker({ setProductPicker }) {
             <input
               placeholder="Search product"
               className="w-full pl-10 py-2 border border-gray-300 focus:outline-none font-normal text-sm"
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => debouncedSearch(e.target.value)}
             />
           </div>
         </nav>
