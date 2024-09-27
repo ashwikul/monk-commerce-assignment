@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
+import Product from "./Product";
 
 function ProductList() {
   const [addedProducts, setAddedProducts] = useState([{}]);
+  let order = 1;
 
   const addEmptyProduct = () => {
     const list = [...addedProducts];
@@ -31,7 +33,11 @@ function ProductList() {
           </div>
           <ul>
             {addedProducts.map((product, index) => {
-              return <li key={index}>product component</li>;
+              return (
+                <li key={index}>
+                  <Product index={index} order={order++} />
+                </li>
+              );
             })}
           </ul>
 
