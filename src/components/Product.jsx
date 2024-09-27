@@ -20,6 +20,49 @@ function Product({
   const [productPicker, setProductPicker] = useState(false);
   const [variantsExpanded, setVariantsExpanded] = useState(false);
 
+  const updateDiscount = (product, value) => {
+    const list = [...addedProducts];
+    const newList = list.map((p) => {
+      if (product.id === p.id) {
+        return { ...p, discount: value };
+      } else return p;
+    });
+    setAddedProducts(newList);
+  };
+
+  const updateDiscountType = (product, value) => {
+    const list = [...addedProducts];
+    const newList = list.map((p) => {
+      if (p.id === product.id) {
+        return { ...p, discountType: value };
+      } else return p;
+    });
+    setAddedProducts(newList);
+  };
+
+  // console.log("products", addedProducts);
+
+  const handleDiscount = (product) => {
+    const list = [...addedProducts];
+    const updatedList = list.map((p) => {
+      if (p.id === product.id) {
+        return {
+          ...p,
+          discountApplied: true,
+        };
+      } else return p;
+    });
+    setAddedProducts(updatedList);
+  };
+
+  const handleDelete = (product) => {
+    const addedProductsCopy = [...addedProducts];
+    const updatedAddedProducts = addedProductsCopy.filter(
+      (p) => p.id !== product.id
+    );
+    setAddedProducts(updatedAddedProducts);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center my-[32px] gap-3">
@@ -41,9 +84,47 @@ function Product({
           />
         </div>
 
-        <button className="border-2 border-[#008060] w-36 h-8 rounded bg-[#008060] text-white font-semibold text-sm">
-          Add Discount
-        </button>
+        {product.discountApplied ? (
+          <div className="w-36 h-8 flex gap-2">
+            <input
+              type="number"
+              className="w-[69px] h-8 border border-[#0000001A]"
+              value={product.discount || " "}
+              onChange={(e) => updateDiscount(product, e.target.value)}
+            ></input>
+            <select
+              className="w-24 h-8 border border-[#0000001A]"
+              onChange={(e) => updateDiscountType(product, e.target.value)}
+              value={product.discountType || "percent"}
+            >
+              <option
+                className="font-normal text-sm text-[#000000CC]"
+                value="percent"
+              >
+                % off
+              </option>
+              <option
+                className="font-normal text-sm text-[#000000CC]"
+                value="flat"
+              >
+                flat off
+              </option>
+            </select>
+            <img
+              src={close}
+              width={11.67}
+              height={11.67}
+              onClick={() => handleDelete(product)}
+            />
+          </div>
+        ) : (
+          <button
+            className="border-2 border-[#008060] w-36 h-8 rounded bg-[#008060] text-white font-semibold text-sm"
+            onClick={() => handleDiscount(product)}
+          >
+            Add Discount
+          </button>
+        )}
 
         {productPicker && (
           <ProductPicker
@@ -55,6 +136,7 @@ function Product({
           />
         )}
       </div>
+
       {product?.variants &&
         (variantsExpanded ? (
           <div
