@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import Product from "./Product";
+import {
+  handleDragOver,
+  handleOnDropVariants,
+  handleOnDropProducts,
+  handleDragStart,
+} from "../utils/helpers";
 
 function ProductList() {
   const [addedProducts, setAddedProducts] = useState([{}]);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [draggedIndex, setDraggedIndex] = useState(null);
 
   let order = 1;
 
@@ -23,7 +30,8 @@ function ProductList() {
     setAddedProducts(list);
   };
 
-  console.log("selected products", selectedProducts);
+  // console.log("selected products", selectedProducts);
+  console.log("added products", addedProducts);
 
   return (
     <div>
@@ -47,7 +55,23 @@ function ProductList() {
           <ul>
             {addedProducts.map((product, index) => {
               return (
-                <li key={index}>
+                <li
+                  key={index}
+                  draggable
+                  onDragStart={(e) =>
+                    handleDragStart(setDraggedIndex, index, e)
+                  }
+                  onDragOver={(e) => handleDragOver(draggedIndex, index, e)}
+                  onDrop={() =>
+                    handleOnDropProducts(
+                      index,
+                      draggedIndex,
+                      addedProducts,
+                      setAddedProducts,
+                      setDraggedIndex
+                    )
+                  }
+                >
                   <Product
                     index={index}
                     product={product}
