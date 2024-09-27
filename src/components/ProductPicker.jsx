@@ -233,11 +233,8 @@ function ProductPicker({
   };
 
   return (
-    <div
-      // className="w-[934px] h-[1027px] bg-[#00000033] absolute top-[75px] left-[253px] rounded flex justify-center items-center"
-      className="p-24 bg-[#00000033] absolute top-[75px] left-[253px] rounded flex justify-center items-center"
-    >
-      <div className="w-[663px] h-[612px] bg-[#FFFFFF] rounded flex flex-col">
+    <div className=" p-0 md:p-24 bg-[#00000033]  absolute top-0 left-0 md:top-[75px] md:left-[253px] rounded flex justify-center items-center">
+      <div className="w-screen md:w-[663px] h-full md:h-[612px] bg-[#FFFFFF] rounded flex flex-col">
         <header className="flex justify-between items-center border border-[#0000001A] py-3 px-5 font-medium text-lg text-[#000000E5]">
           <div>Select Products</div>
           <button>
@@ -348,7 +345,7 @@ function ProductPicker({
             </div>
           )}
         </div>
-        <footer className="flex justify-between items-center py-3 px-5  sticky bottom-0 h-12 border border-[#0000001A]">
+        <footer className="flex justify-between items-center py-3 px-5  sticky bottom-0 h-12 border border-[#0000001A] bg-white">
           <p className="text-base text-[000000E5]">
             {selectedProducts.length} product selected
           </p>

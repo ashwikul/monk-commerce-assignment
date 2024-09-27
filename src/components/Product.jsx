@@ -73,10 +73,13 @@ function Product({
 
   return (
     <div>
-      <div className="flex  items-center mt-8 mb-4 gap-2 font-normal text-sm text-[#000000CC]">
+      <div className="flex items-center mt-8 mb-4 gap-1 sm:gap-2 font-normal text-sm text-[#000000CC]">
         <img src={dots} width={7} height={14} alt="dots" />
         <div>{order}.</div>
-        <div className="border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] w-[215px] h-8 flex justify-between items-center py-[7px] px-[10px] bg-white ">
+        <div
+          // className="border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] w-[215px] h-8 flex justify-between items-center py-[7px] px-[10px] bg-white "
+          className="border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] w-52 h-8 flex justify-between items-center py-1.5 px-2.5 bg-white "
+        >
           <div
             className={product.title ? "text-[#000000CC]" : "text-[#00000080]"}
           >
@@ -98,12 +101,12 @@ function Product({
           <div className=" h-8 flex gap-1">
             <input
               type="number"
-              className="w-[69px] h-8 border border-[#0000001A] bg-white shadow-[0px_2px_4px_0px_#0000001A] pl-3"
+              className="w-12 sm:w-16 h-8 border border-[#0000001A] bg-white shadow-[0px_2px_4px_0px_#0000001A] pl-3"
               value={product.discount || " "}
               onChange={(e) => updateDiscount(product, e.target.value)}
             ></input>
             <select
-              className="w-24 h-8 border border-[#0000001A] bg-white shadow-[0px_2px_4px_0px_#0000001A] px-3"
+              className="w-16 sm:w-24 h-8 border border-[#0000001A] bg-white shadow-[0px_2px_4px_0px_#0000001A] px-1 sm:px-3"
               onChange={(e) => updateDiscountType(product, e.target.value)}
               value={product.discountType || "percent"}
             >
@@ -132,7 +135,7 @@ function Product({
           </div>
         ) : (
           <button
-            className={`border-2 w-36 h-8 rounded text-sm font-semibold ${
+            className={`border-2 w-28 sm:w-36 h-8 rounded text-sm font-semibold ${
               product.id
                 ? "border-[#008060] bg-[#008060] text-white"
                 : "border-gray-300 bg-gray-200 text-gray-500 cursor-not-allowed"
@@ -181,7 +184,7 @@ function Product({
       {/* show variants */}
 
       {variantsExpanded && product?.variants && (
-        <ul className="ml-12 ">
+        <ul className="ml-8 md:ml-12 ">
           {product.variants.map((variant, index) => (
             <li
               key={index}

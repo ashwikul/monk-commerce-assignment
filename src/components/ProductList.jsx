@@ -29,11 +29,9 @@ function ProductList() {
     setAddedProducts(list);
   };
 
-  // console.log(addedProducts);
-
   return (
     <div>
-      <nav className="border border-[#D1D1D1] py-[8px] pl-[21px]">
+      <nav className="border border-[#D1D1D1] py-2 pl-4 ">
         <ul className="flex items-center gap-4">
           <li>
             <img src={logo} alt="monk commerce logo" />
@@ -43,12 +41,12 @@ function ProductList() {
           </li>
         </ul>
       </nav>
-      <div className="w-fit ml-[321px] mt-[60px]">
-        <h4 className="mb-[20px] text-left font-semibold text-[#202223] text-base">
+      <div className="w-fit mt-14 pl-2 md:ml-80 md:pl-0 ">
+        <h4 className=" text-left font-semibold text-[#202223] text-base mb-5">
           Add Products
         </h4>
         <div className="flex font-medium text-sm text-[#000000E5] text-center">
-          <div className="w-[215px]">Product</div>
+          <div className="w-52">Product</div>
           <div className="w-36">Discount</div>
         </div>
         <ul>
