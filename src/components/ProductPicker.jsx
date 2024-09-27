@@ -7,28 +7,45 @@ function ProductPicker({ setProductPicker }) {
   const [productsList, setProductsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    fetchData();
+    fetchData(null, 0);
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (text, pageNumber) => {
+    console.log("fetching data", text, pageNumber);
+
+    let URL;
+    if (text) {
+      URL = `https://stageapi.monkcommerce.app/task/products/search?search=${text}&page=${pageNumber}&limit=10`;
+    } else {
+      URL = `https://stageapi.monkcommerce.app/task/products/search?page=${pageNumber}&limit=10`;
+    }
     setIsLoading(true);
-    const res = await fetch(
-      `https://stageapi.monkcommerce.app/task/products/search?page=${pageNumber}&limit=10`,
-      {
+    try {
+      const res = await fetch(URL, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
         },
+      });
+      const data = await res.json();
+      console.log("data", data);
+      if (!data) {
+        setProductsList([]);
+        setIsLoading(false);
+        return;
       }
-    );
-    const data = await res.json();
-    console.log("data", data);
-    setPageNumber((prev) => prev + 1);
-    setProductsList((prev) => [...prev, ...data]);
-    setIsLoading(false);
+
+      setPageNumber((prev) => prev + 1);
+      setProductsList((prev) => [...prev, ...data]);
+    } catch (error) {
+      console.log("Error while fetching products", error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const updateProductChecked = (product) => {
@@ -43,7 +60,11 @@ function ProductPicker({ setProductPicker }) {
   console.log("productsList", productsList);
 
   const handleSearch = (value) => {
-    console.log(value);
+    console.log("search text", value);
+    setSearchText(value);
+    setPageNumber(0);
+    setProductsList([]);
+    !isLoading && fetchData(value, 0);
   };
 
   const handleScroll = () => {
@@ -53,7 +74,7 @@ function ProductPicker({ setProductPicker }) {
     const scrollHeight = productPicker.scrollHeight;
 
     if (scrollTop + clientHeight >= scrollHeight) {
-      !isLoading && fetchData();
+      !isLoading && fetchData(searchText, pageNumber);
     }
   };
 
@@ -146,6 +167,11 @@ function ProductPicker({ setProductPicker }) {
           {isLoading && (
             <div className="flex justify-center items-center m-10">
               <div className="loader"></div>
+            </div>
+          )}
+          {!isLoading && productsList.length === 0 && (
+            <div className="flex justify-center items-center m-10">
+              <p>No products found</p>
             </div>
           )}
         </div>
