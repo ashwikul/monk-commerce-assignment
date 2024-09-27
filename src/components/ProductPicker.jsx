@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import close from "../assets/close.svg";
 import search from "../assets/search.svg";
+import image from "../assets/image.png";
+import ReactDOM from "react-dom";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faImage } from "@awesome.me/kit-KIT_CODE/icons/classic/solid";
 
 function ProductPicker({
   index,
@@ -14,9 +18,11 @@ function ProductPicker({
   const [isLoading, setIsLoading] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
   const [searchText, setSearchText] = useState("");
+  const searchRef = useRef(null);
 
   useEffect(() => {
     fetchData(null, 0);
+    searchRef.current.focus();
   }, []);
 
   const fetchData = async (text, pageNumber) => {
@@ -217,10 +223,15 @@ function ProductPicker({
     }
   };
 
+  console.log("productsList", productsList);
+
   return (
-    <div className="w-[934px] h-[1027px] bg-[#00000033] absolute top-[75px] left-[253px] rounded flex justify-center items-center">
+    <div
+      // className="w-[934px] h-[1027px] bg-[#00000033] absolute top-[75px] left-[253px] rounded flex justify-center items-center"
+      className="p-24 bg-[#00000033] absolute top-[75px] left-[253px] rounded flex justify-center items-center"
+    >
       <div className="w-[663px] h-[612px] bg-[#FFFFFF] rounded flex flex-col">
-        <header className="flex justify-between items-center border border-[#0000001A] py-3 px-5">
+        <header className="flex justify-between items-center border border-[#0000001A] py-3 px-5 font-medium text-lg text-[#000000E5]">
           <div>Select Products</div>
           <button>
             <img
@@ -233,7 +244,7 @@ function ProductPicker({
           </button>
         </header>
         <nav className=" py-3 px-5 border border-[#0000001A]">
-          <div className="flex relative w-full h-8">
+          <div className="flex relative w-full h-8 ">
             <img
               src={search}
               alt="search"
@@ -243,8 +254,9 @@ function ProductPicker({
             />
             <input
               placeholder="Search product"
-              className="w-full pl-10 py-2 border border-gray-300 focus:outline-none font-normal text-sm"
+              className="w-full pl-10 py-2 border border-gray-300 font-normal text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
               onChange={(e) => debouncedSearch(e.target.value)}
+              ref={searchRef}
             />
           </div>
         </nav>
@@ -253,22 +265,36 @@ function ProductPicker({
           id="product_picker"
           onScroll={handleScroll}
         >
-          <ul>
+          <ul className="font-normal text-base text-[#000000E5]">
             {productsList.map((product) => (
-              <li key={product.id} className="border border-[#0000001A] pt-3 ">
-                <div className="flex  items-center gap-2 ml-5">
+              <li
+                key={product.id}
+                className="border border-[#0000001A] cursor-pointer"
+              >
+                <div
+                  className="flex items-center gap-2 ml-5 py-3 "
+                  onClick={() => updateProductChecked(product)}
+                >
                   <input
                     type="checkbox"
                     checked={product.checked || false}
-                    className="accent-[#008060]"
+                    className="accent-[#008060] w-6 h-6"
                     onChange={() => updateProductChecked(product)}
                   />
-                  <img
-                    src={product.image.src}
-                    width={36}
-                    height={36}
-                    alt={product.title}
-                  />
+                  {product.image.src ? (
+                    <img
+                      src={product.image.src || image}
+                      width={36}
+                      height={36}
+                      alt={product.title}
+                    />
+                  ) : (
+                    <div className="w-[38px] h-[38px] border border-[#0000001A] flex justify-center items-center rounded">
+                      {" "}
+                      <img src={image} alt={product.title} />
+                    </div>
+                  )}
+
                   <p>{product.title}</p>
                 </div>
 
@@ -277,13 +303,14 @@ function ProductPicker({
                     {product.variants.map((variant, index) => (
                       <li
                         key={variant.id}
-                        className="border border-[#0000001A] py-3  "
+                        className="border border-[#0000001A] py-3 px-3 cursor-pointer"
+                        onClick={() => updateVariantChecked(variant, product)}
                       >
                         <div className="flex justify-between ml-12 mr-5">
                           <div className="flex gap-2">
                             <input
                               type="checkbox"
-                              className="accent-[#008060]"
+                              className=" accent-[#008060] w-6 h-6"
                               checked={variant.checked || false}
                               onChange={() =>
                                 updateVariantChecked(variant, product)
@@ -291,8 +318,8 @@ function ProductPicker({
                             />
                             <p> {variant.title}</p>
                           </div>
-                          <div className="flex gap-2">
-                            <p>{variant.product_id} available</p>
+                          <div className="flex gap-8">
+                            <p>{variant.inventory_quantity || 0} available</p>
                             <p>${variant.price}</p>
                           </div>
                         </div>
@@ -315,16 +342,18 @@ function ProductPicker({
           )}
         </div>
         <footer className="flex justify-between items-center py-3 px-5  sticky bottom-0 h-12 border border-[#0000001A]">
-          <p>{selectedProducts.length} product selected</p>
-          <div className="flex gap-2">
+          <p className="text-base text-[000000E5]">
+            {selectedProducts.length} product selected
+          </p>
+          <div className="flex gap-2 text-sm font-semibold">
             <button
-              className="border border-[#00000066] text-[#00000066] h-8 w-[104px] rounded"
+              className="border border-[#00000066] text-[#00000066] h-[34px] w-[106px] rounded cursor-pointer"
               onClick={() => setProductPicker(false)}
             >
               Cancel
             </button>
             <button
-              className="border-2 border-[#008060] bg-[#008060] text-white h-8 w-[72px] rounded"
+              className="border-2 border-[#008060] bg-[#008060] text-white h-9 w-[76px] rounded cursor-pointer"
               onClick={() => {
                 addProduct(index);
                 setProductPicker(false);
