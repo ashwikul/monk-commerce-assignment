@@ -18,6 +18,7 @@ function ProductPicker({
   const [isLoading, setIsLoading] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
   const [searchText, setSearchText] = useState("");
+  const [hasMoreData, setHasMoreData] = useState(true);
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -42,12 +43,20 @@ function ProductPicker({
         },
       });
       const data = await res.json();
-      if (!data) {
+      // if search text is not found in the whole data set
+      if (!data && pageNumber === 0) {
         setProductsList([]);
+        setIsLoading(false);
+        setHasMoreData(false);
+        return;
+      }
+      // no more data available
+      if (!data && pageNumber != 0) {
+        setHasMoreData(false);
         setIsLoading(false);
         return;
       }
-
+      setHasMoreData(true);
       setPageNumber((prev) => prev + 1);
       setProductsList((prev) => [...prev, ...data]);
     } catch (error) {
@@ -219,11 +228,9 @@ function ProductPicker({
     const scrollHeight = productPicker.scrollHeight;
 
     if (scrollTop + clientHeight >= scrollHeight) {
-      !isLoading && fetchData(searchText, pageNumber);
+      !isLoading && hasMoreData && fetchData(searchText, pageNumber);
     }
   };
-
-  console.log("productsList", productsList);
 
   return (
     <div

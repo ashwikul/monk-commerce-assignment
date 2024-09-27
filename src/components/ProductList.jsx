@@ -29,7 +29,7 @@ function ProductList() {
     setAddedProducts(list);
   };
 
-  console.log(addedProducts);
+  // console.log(addedProducts);
 
   return (
     <div>

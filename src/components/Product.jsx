@@ -26,9 +26,6 @@ function Product({
   const [variantsExpanded, setVariantsExpanded] = useState(false);
   const [draggedSubIndex, setDraggedSubIndex] = useState(null);
 
-  console.log("product", product);
-  console.log("index", index);
-
   const updateDiscount = (product, value) => {
     const list = [...addedProducts];
     const newList = list.map((p) => {
