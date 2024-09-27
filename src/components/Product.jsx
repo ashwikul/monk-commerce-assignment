@@ -5,7 +5,14 @@ import close from "../assets/close.svg";
 import carret from "../assets/carret.svg";
 import ProductPicker from "./ProductPicker";
 
-function Product({ index, order, selectedProducts, setSelectedProducts }) {
+function Product({
+  index,
+  product,
+  order,
+  selectedProducts,
+  setSelectedProducts,
+  addProduct,
+}) {
   const [productPicker, setProductPicker] = useState(false);
 
   return (
@@ -16,7 +23,7 @@ function Product({ index, order, selectedProducts, setSelectedProducts }) {
 
         <div className="border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] w-96 h-8 flex justify-between items-center py-[7px] px-[10px]">
           <div className="text-[#00000080] font-normal text-sm">
-            Select Product
+            {product.title || "Select Product"}
           </div>
           <img
             src={edit}
@@ -24,6 +31,7 @@ function Product({ index, order, selectedProducts, setSelectedProducts }) {
             height={16}
             onClick={() => {
               setProductPicker(true);
+              setSelectedProducts([]);
             }}
           />
         </div>
@@ -34,9 +42,11 @@ function Product({ index, order, selectedProducts, setSelectedProducts }) {
 
         {productPicker && (
           <ProductPicker
+            index={index}
             setProductPicker={setProductPicker}
             selectedProducts={selectedProducts}
             setSelectedProducts={setSelectedProducts}
+            addProduct={addProduct}
           />
         )}
       </div>

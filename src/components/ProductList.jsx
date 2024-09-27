@@ -14,6 +14,15 @@ function ProductList() {
     setAddedProducts(list);
   };
 
+  const addProduct = (index) => {
+    if (selectedProducts.length === 0) {
+      return;
+    }
+    const list = [...addedProducts];
+    list.splice(index, 1, ...selectedProducts);
+    setAddedProducts(list);
+  };
+
   console.log("selected products", selectedProducts);
 
   return (
@@ -41,9 +50,11 @@ function ProductList() {
                 <li key={index}>
                   <Product
                     index={index}
+                    product={product}
                     order={order++}
                     selectedProducts={selectedProducts}
                     setSelectedProducts={setSelectedProducts}
+                    addProduct={addProduct}
                   />
                 </li>
               );

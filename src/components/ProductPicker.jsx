@@ -3,9 +3,11 @@ import close from "../assets/close.svg";
 import search from "../assets/search.svg";
 
 function ProductPicker({
+  index,
   setProductPicker,
   selectedProducts,
   setSelectedProducts,
+  addProduct,
 }) {
   const apiKey = process.env.REACT_APP_API_KEY;
   const [productsList, setProductsList] = useState([]);
@@ -324,6 +326,7 @@ function ProductPicker({
             <button
               className="border-2 border-[#008060] bg-[#008060] text-white h-8 w-[72px] rounded"
               onClick={() => {
+                addProduct(index);
                 setProductPicker(false);
               }}
             >
