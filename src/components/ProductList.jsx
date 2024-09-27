@@ -55,6 +55,8 @@ function ProductList() {
                     selectedProducts={selectedProducts}
                     setSelectedProducts={setSelectedProducts}
                     addProduct={addProduct}
+                    addedProducts={addedProducts}
+                    setAddedProducts={setAddedProducts}
                   />
                 </li>
               );

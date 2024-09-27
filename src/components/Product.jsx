@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dots from "../assets/dots.svg";
 import edit from "../assets/edit.svg";
 import close from "../assets/close.svg";
 import carret from "../assets/carret.svg";
 import ProductPicker from "./ProductPicker";
+import show from "../assets/show.svg";
+import Variant from "./Variant";
 
 function Product({
   index,
@@ -12,8 +14,11 @@ function Product({
   selectedProducts,
   setSelectedProducts,
   addProduct,
+  addedProducts,
+  setAddedProducts,
 }) {
   const [productPicker, setProductPicker] = useState(false);
+  const [variantsExpanded, setVariantsExpanded] = useState(false);
 
   return (
     <div>
@@ -50,6 +55,46 @@ function Product({
           />
         )}
       </div>
+      {product?.variants &&
+        (variantsExpanded ? (
+          <div
+            className="flex justify-end gap-1 mb-[20px]"
+            onClick={() => setVariantsExpanded(false)}
+          >
+            <p className="text-[#006EFF] text-xs font-normal underline">
+              Hide variants
+            </p>
+            <img src={carret} width={11} height={21} />
+          </div>
+        ) : (
+          <div
+            className="flex justify-end gap-1 mb-[20px]"
+            onClick={() => setVariantsExpanded(true)}
+          >
+            <p className="text-[#006EFF] text-xs font-normal underline">
+              Show variants
+            </p>
+            <img src={show} width={11} height={21} />
+          </div>
+        ))}
+
+      {/* show variants */}
+
+      {variantsExpanded && product?.variants && (
+        <ul className="ml-10">
+          {product.variants.map((variant, index) => (
+            <li key={index}>
+              <Variant
+                key={variant.id}
+                variant={variant}
+                product={product}
+                addedProducts={addedProducts}
+                setAddedProducts={setAddedProducts}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
