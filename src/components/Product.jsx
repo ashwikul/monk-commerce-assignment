@@ -155,6 +155,7 @@ function Product({
       </div>
 
       {product?.variants &&
+        product.variants.length > 0 &&
         (variantsExpanded ? (
           <div className="flex justify-end gap-1 mb-[15px]">
             <p
