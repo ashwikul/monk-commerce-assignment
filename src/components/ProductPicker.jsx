@@ -5,25 +5,30 @@ import search from "../assets/search.svg";
 function ProductPicker({ setProductPicker }) {
   const apiKey = process.env.REACT_APP_API_KEY;
   const [productsList, setProductsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pageNumber, setPageNumber] = useState(0);
 
   useEffect(() => {
-    fetchInitialData();
+    fetchData();
   }, []);
 
-  const fetchInitialData = async () => {
+  const fetchData = async () => {
+    setIsLoading(true);
     const res = await fetch(
-      `https://stageapi.monkcommerce.app/task/products/search?page=0&limit=10`,
+      `https://stageapi.monkcommerce.app/task/products/search?page=${pageNumber}&limit=10`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": apiKey, // Authorization header
+          "x-api-key": apiKey,
         },
       }
     );
     const data = await res.json();
     console.log("data", data);
-    setProductsList(data);
+    setPageNumber((prev) => prev + 1);
+    setProductsList((prev) => [...prev, ...data]);
+    setIsLoading(false);
   };
 
   const updateProductChecked = (product) => {
@@ -39,6 +44,17 @@ function ProductPicker({ setProductPicker }) {
 
   const handleSearch = (value) => {
     console.log(value);
+  };
+
+  const handleScroll = () => {
+    const productPicker = document.getElementById("product_picker");
+    const scrollTop = productPicker.scrollTop;
+    const clientHeight = productPicker.clientHeight;
+    const scrollHeight = productPicker.scrollHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight) {
+      !isLoading && fetchData();
+    }
   };
 
   return (
@@ -72,7 +88,11 @@ function ProductPicker({ setProductPicker }) {
             />
           </div>
         </nav>
-        <div className="flex-grow overflow-auto">
+        <div
+          className="flex-grow overflow-auto"
+          id="product_picker"
+          onScroll={handleScroll}
+        >
           <ul>
             {productsList.map((product) => (
               <li key={product.id} className="border border-[#0000001A] pt-3 ">
@@ -123,6 +143,11 @@ function ProductPicker({ setProductPicker }) {
               </li>
             ))}
           </ul>
+          {isLoading && (
+            <div className="flex justify-center items-center m-10">
+              <div className="loader"></div>
+            </div>
+          )}
         </div>
         <footer className="flex justify-between items-center py-3 px-5  sticky bottom-0 h-12 border border-[#0000001A]">
           <p>0 product selected</p>
