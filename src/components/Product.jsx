@@ -5,7 +5,7 @@ import close from "../assets/close.svg";
 import carret from "../assets/carret.svg";
 import ProductPicker from "./ProductPicker";
 
-function Product({ index, order }) {
+function Product({ index, order, selectedProducts, setSelectedProducts }) {
   const [productPicker, setProductPicker] = useState(false);
 
   return (
@@ -32,7 +32,13 @@ function Product({ index, order }) {
           Add Discount
         </button>
 
-        {productPicker && <ProductPicker setProductPicker={setProductPicker} />}
+        {productPicker && (
+          <ProductPicker
+            setProductPicker={setProductPicker}
+            selectedProducts={selectedProducts}
+            setSelectedProducts={setSelectedProducts}
+          />
+        )}
       </div>
     </div>
   );

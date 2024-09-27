@@ -4,6 +4,8 @@ import Product from "./Product";
 
 function ProductList() {
   const [addedProducts, setAddedProducts] = useState([{}]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
   let order = 1;
 
   const addEmptyProduct = () => {
@@ -11,6 +13,8 @@ function ProductList() {
     list.push({});
     setAddedProducts(list);
   };
+
+  console.log("selected products", selectedProducts);
 
   return (
     <div>
@@ -35,7 +39,12 @@ function ProductList() {
             {addedProducts.map((product, index) => {
               return (
                 <li key={index}>
-                  <Product index={index} order={order++} />
+                  <Product
+                    index={index}
+                    order={order++}
+                    selectedProducts={selectedProducts}
+                    setSelectedProducts={setSelectedProducts}
+                  />
                 </li>
               );
             })}

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import close from "../assets/close.svg";
 import search from "../assets/search.svg";
 
-function ProductPicker({ setProductPicker }) {
+function ProductPicker({
+  setProductPicker,
+  selectedProducts,
+  setSelectedProducts,
+}) {
   const apiKey = process.env.REACT_APP_API_KEY;
   const [productsList, setProductsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,8 +18,6 @@ function ProductPicker({ setProductPicker }) {
   }, []);
 
   const fetchData = async (text, pageNumber) => {
-    console.log("fetching data", text, pageNumber);
-
     let URL;
     if (text) {
       URL = `https://stageapi.monkcommerce.app/task/products/search?search=${text}&page=${pageNumber}&limit=10`;
@@ -32,7 +34,6 @@ function ProductPicker({ setProductPicker }) {
         },
       });
       const data = await res.json();
-      console.log("data", data);
       if (!data) {
         setProductsList([]);
         setIsLoading(false);
@@ -49,15 +50,141 @@ function ProductPicker({ setProductPicker }) {
   };
 
   const updateProductChecked = (product) => {
-    console.log("product", product);
+    // check the products which are checked
+    const productsListCopy = [...productsList];
+    const updatedProductList = productsListCopy.map((p) => {
+      if (p.id === product.id) {
+        return {
+          ...p,
+          checked: !p.checked,
+          variants: p.variants?.map((v) => ({
+            ...v,
+            checked: !p.checked,
+          })),
+        };
+      } else {
+        return p;
+      }
+    });
+    setProductsList(updatedProductList);
+
+    // add to the selectedProducts
+    const selectedProductsCopy = [...selectedProducts];
+    const isProductExisting = selectedProductsCopy.some(
+      (p) => p.id === product.id
+    );
+
+    // if product is existing ,then delete from selectedproducts
+    if (isProductExisting) {
+      const updatedSelectedProducts = selectedProductsCopy.filter(
+        (p) => p.id !== product.id
+      );
+      setSelectedProducts(updatedSelectedProducts);
+    } else {
+      // if product is not existing ,then add to the selectedproducts
+      setSelectedProducts((prev) => [...prev, product]);
+    }
   };
 
   const updateVariantChecked = (variant, product) => {
-    console.log("variant", variant);
-    console.log("product", product);
-  };
+    // update checked products
+    const productListCopy = [...productsList];
+    const updatedProductListCopy = productListCopy.map((p) => {
+      if (p.id === product.id) {
+        return {
+          ...p,
+          variants: p.variants.map((v) => {
+            if (v.id === variant.id) {
+              return {
+                ...v,
+                checked: !v.checked,
+              };
+            } else {
+              return v;
+            }
+          }),
+        };
+      } else {
+        return p;
+      }
+    });
+    // update parent checkbox as per childs
+    const updatedProductList = updatedProductListCopy.map((p) => {
+      if (p.id === product.id) {
+        const anyVariantChecked = p.variants.some((v) => v.checked === true);
+        if (anyVariantChecked) {
+          return {
+            ...p,
+            checked: true,
+          };
+        } else {
+          return {
+            ...p,
+            checked: false,
+          };
+        }
+      } else {
+        return p;
+      }
+    });
+    setProductsList(updatedProductList);
 
-  console.log("productsList", productsList);
+    // add to the selected products
+    const selectedProductsCopy = [...selectedProducts];
+
+    // check if product is existing in selectedProducts
+    const isProductExisting = selectedProductsCopy.find(
+      (p) => p.id === product.id
+    );
+    let updatedSelectedProducts;
+    if (isProductExisting) {
+      // if the product exists,check if the variant exists
+      const isVariantExisting = selectedProductsCopy
+        .find((p) => p.id === product.id)
+        .variants.find((v) => v.id === variant.id);
+      if (isVariantExisting) {
+        // if the variant existing ,delete from the variants
+        updatedSelectedProducts = selectedProductsCopy.map((p) => {
+          if (p.id === product.id) {
+            return {
+              ...p,
+              variants: p.variants.filter((v) => v.id !== variant.id),
+            };
+          } else {
+            return p;
+          }
+        });
+      } else {
+        //  if the variant does not exists,add to the variants
+        updatedSelectedProducts = selectedProductsCopy.map((p) => {
+          if (p.id === product.id) {
+            return {
+              ...p,
+              variants: [...p.variants, variant],
+            };
+          } else {
+            return p;
+          }
+        });
+      }
+    } else {
+      // if the product doesnt exist, add product to the selectedproducts
+      const updatedSelectedProductsCopy = [...selectedProductsCopy, product];
+
+      // filter out remaining variants except the passed one
+      updatedSelectedProducts = updatedSelectedProductsCopy.map((p) => {
+        if (p.id === product.id) {
+          return {
+            ...p,
+            variants: p.variants.filter((v) => v.id === variant.id),
+          };
+        } else {
+          return p;
+        }
+      });
+    }
+    setSelectedProducts(updatedSelectedProducts);
+  };
 
   const debounceSearch = (callback, delay) => {
     let timer;
@@ -68,10 +195,10 @@ function ProductPicker({ setProductPicker }) {
   };
 
   const handleSearch = (value) => {
-    console.log("search text", value);
     setSearchText(value);
     setPageNumber(0);
     setProductsList([]);
+    setSelectedProducts([]);
     !isLoading && fetchData(value, 0);
   };
 
@@ -186,7 +313,7 @@ function ProductPicker({ setProductPicker }) {
           )}
         </div>
         <footer className="flex justify-between items-center py-3 px-5  sticky bottom-0 h-12 border border-[#0000001A]">
-          <p>0 product selected</p>
+          <p>{selectedProducts.length} product selected</p>
           <div className="flex gap-2">
             <button
               className="border border-[#00000066] text-[#00000066] h-8 w-[104px] rounded"
