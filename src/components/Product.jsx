@@ -87,6 +87,7 @@ function Product({
           </div>
           <img
             src={edit}
+            alt="edit"
             width={16}
             height={16}
             onClick={() => {
@@ -126,6 +127,7 @@ function Product({
             {addedProducts.length > 1 && (
               <img
                 src={close}
+                alt="close"
                 width={11.67}
                 height={11.67}
                 onClick={() => handleDelete(product)}
@@ -167,7 +169,7 @@ function Product({
             >
               Hide variants
             </p>
-            <img src={carret} width={11} height={21} />
+            <img src={carret} alt="carret" width={11} height={21} />
           </div>
         ) : (
           <div className="flex justify-end gap-1 mb-[20px] ">
@@ -177,7 +179,7 @@ function Product({
             >
               Show variants
             </p>
-            <img src={show} width={11} height={21} />
+            <img src={show} alt="show" width={11} height={21} />
           </div>
         ))}
 

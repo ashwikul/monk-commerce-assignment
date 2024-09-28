@@ -2,9 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import close from "../assets/close.svg";
 import search from "../assets/search.svg";
 import image from "../assets/image.png";
-import ReactDOM from "react-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faImage } from "@awesome.me/kit-KIT_CODE/icons/classic/solid";
 
 function ProductPicker({
   index,
@@ -51,7 +48,7 @@ function ProductPicker({
         return;
       }
       // no more data available
-      if (!data && pageNumber != 0) {
+      if (!data && pageNumber !== 0) {
         setHasMoreData(false);
         setIsLoading(false);
         return;
@@ -265,7 +262,7 @@ function ProductPicker({
           </div>
         </nav>
         <div
-          className="flex-grow overflow-auto"
+          className="flex-grow overflow-auto h-screen"
           id="product_picker"
           onScroll={handleScroll}
         >
