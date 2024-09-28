@@ -1,4 +1,4 @@
-# Webpage for an e-commerce store owner
+# Monk Commerce Assignment
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/117649ee-55e4-4d6b-88cb-84c0851aaf1d/deploy-status)](https://app.netlify.com/sites/inventorylist/deploys)
 
@@ -50,11 +50,3 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-# Approach: 🚶
-
-We are using React for frontend UI and Tailwindcss for styling elements.
-
-# Status: 📶
-
-Deployed
