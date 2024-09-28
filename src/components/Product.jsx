@@ -27,10 +27,10 @@ function Product({
   const [draggedSubIndex, setDraggedSubIndex] = useState(null);
 
   // Function to update discount value of a product
-  const updateDiscount = (product, value) => {
+  const updateDiscount = (product, value, index) => {
     const list = [...addedProducts];
-    const newList = list.map((p) => {
-      if (product.id === p.id) {
+    const newList = list.map((p, i) => {
+      if (product.id === p.id && i === index) {
         return { ...p, discount: value };
       } else return p;
     });
@@ -38,10 +38,10 @@ function Product({
   };
 
   // Function to update discount type (percent/flat) of a product
-  const updateDiscountType = (product, value) => {
+  const updateDiscountType = (product, value, index) => {
     const list = [...addedProducts];
-    const newList = list.map((p) => {
-      if (p.id === product.id) {
+    const newList = list.map((p, i) => {
+      if (p.id === product.id && index === i) {
         return { ...p, discountType: value };
       } else return p;
     });
@@ -49,11 +49,11 @@ function Product({
   };
 
   // Function to apply a discount to the product
-  const handleDiscount = (product) => {
+  const handleDiscount = (product, index) => {
     const list = [...addedProducts];
-    const updatedList = list.map((p) => {
+    const updatedList = list.map((p, i) => {
       if (p.id) {
-        if (p.id === product.id) {
+        if (p.id === product.id && i === index) {
           return {
             ...p,
             discountApplied: true,
@@ -67,12 +67,11 @@ function Product({
   };
 
   // Function to remove a product from the added products list
-  const handleDelete = (product) => {
+  const handleDelete = (product, index) => {
     const addedProductsCopy = [...addedProducts];
-    const updatedAddedProducts = addedProductsCopy.filter(
-      (p) => p.id !== product.id
-    );
-    setAddedProducts(updatedAddedProducts);
+
+    addedProductsCopy.splice(index, 1);
+    setAddedProducts(addedProductsCopy);
   };
 
   return (
@@ -105,11 +104,13 @@ function Product({
               type="number"
               className="w-12 sm:w-16 h-8 border border-[#0000001A] bg-white shadow-[0px_2px_4px_0px_#0000001A] pl-3"
               value={product.discount || " "}
-              onChange={(e) => updateDiscount(product, e.target.value)}
+              onChange={(e) => updateDiscount(product, e.target.value, index)}
             ></input>
             <select
               className="w-16 sm:w-24 h-8 border border-[#0000001A] bg-white shadow-[0px_2px_4px_0px_#0000001A] px-1 sm:px-3"
-              onChange={(e) => updateDiscountType(product, e.target.value)}
+              onChange={(e) =>
+                updateDiscountType(product, e.target.value, index)
+              }
               value={product.discountType || "percent"}
             >
               <option
@@ -131,7 +132,7 @@ function Product({
                 alt="close"
                 width={11.67}
                 height={11.67}
-                onClick={() => handleDelete(product)}
+                onClick={() => handleDelete(product, index)}
                 className="cursor-pointer"
               />
             )}
@@ -143,7 +144,7 @@ function Product({
                 ? "border-[#008060] bg-[#008060] text-white"
                 : "border-gray-300 bg-gray-200 text-gray-500 cursor-not-allowed"
             }`}
-            onClick={() => handleDiscount(product)}
+            onClick={() => handleDiscount(product, index)}
             disabled={!product.id}
           >
             Add Discount
@@ -188,16 +189,16 @@ function Product({
 
       {variantsExpanded && product?.variants && (
         <ul className="ml-8 md:ml-12 ">
-          {product.variants.map((variant, index) => (
+          {product.variants.map((variant, i) => (
             <li
-              key={index}
+              key={i}
               draggable
-              onDragStart={(e) => handleDragStart(setDraggedSubIndex, index, e)}
-              onDragOver={(e) => handleDragOver(draggedSubIndex, index, e)}
+              onDragStart={(e) => handleDragStart(setDraggedSubIndex, i, e)}
+              onDragOver={(e) => handleDragOver(draggedSubIndex, i, e)}
               onDrop={() =>
                 handleOnDrop(
                   product,
-                  index,
+                  i,
                   draggedSubIndex,
                   addedProducts,
                   setAddedProducts,
@@ -209,6 +210,7 @@ function Product({
             >
               <Variant
                 key={variant.id}
+                index={index}
                 variant={variant}
                 product={product}
                 addedProducts={addedProducts}
