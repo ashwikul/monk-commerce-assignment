@@ -11,8 +11,6 @@ Access my site at **[inventorylist](https://inventorylist.netlify.app/)**
 - [About The App](#about-the-app-)
 - [Technologies](#technologies-)
 - [Setup](#setup-)
-- [Approach](#approach-)
-- [Status](#status-)
 
 # About the App: 📚
 
