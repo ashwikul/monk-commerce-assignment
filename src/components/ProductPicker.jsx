@@ -16,6 +16,7 @@ function ProductPicker({
   const [pageNumber, setPageNumber] = useState(0);
   const [searchText, setSearchText] = useState("");
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -203,26 +204,33 @@ function ProductPicker({
     setSelectedProducts(updatedSelectedProducts);
   };
 
-  // Debounce function to delay search requests
-  const debounceSearch = (callback, delay) => {
-    let timer;
-    return function (...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => callback.apply(this, args), delay);
-    };
+  const debounceSearch = (value, debounceTimeout) => {
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      performSearch(value);
+    }, 500);
+
+    setDebounceTimeout(timeout);
   };
 
   // Handle search input change
-  const handleSearch = (value) => {
-    setSearchText(value);
+  const performSearch = (value) => {
+    console.log(value);
+
     setPageNumber(0);
     setProductsList([]);
     setSelectedProducts([]);
     !isLoading && fetchData(value, 0);
   };
 
-  // Create a debounced version of the search handler
-  const debouncedSearch = debounceSearch(handleSearch, 500);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchText(value);
+    debounceSearch(value, debounceTimeout);
+  };
 
   // Handle infinite scroll event
   const handleScroll = () => {
@@ -263,8 +271,10 @@ function ProductPicker({
             />
             <input
               placeholder="Search product"
+              type="text"
+              value={searchText}
               className="w-full pl-10 py-2 border border-gray-300 font-normal text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-              onChange={(e) => debouncedSearch(e.target.value)}
+              onChange={(e) => handleSearch(e)}
               ref={searchRef}
             />
           </div>
