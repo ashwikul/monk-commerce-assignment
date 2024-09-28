@@ -20,7 +20,7 @@ function ProductPicker({
 
   useEffect(() => {
     fetchData(null, 0);
-    searchRef.current.focus();
+    searchRef.current.focus(); // Set focus to the search input
   }, []);
 
   const fetchData = async (text, pageNumber) => {
@@ -40,14 +40,16 @@ function ProductPicker({
         },
       });
       const data = await res.json();
-      // if search text is not found in the whole data set
+
+      // Handle no data found case for the initial page
       if (!data && pageNumber === 0) {
         setProductsList([]);
         setIsLoading(false);
         setHasMoreData(false);
         return;
       }
-      // no more data available
+
+      // If no more data is available for further pages
       if (!data && pageNumber !== 0) {
         setHasMoreData(false);
         setIsLoading(false);
@@ -64,7 +66,7 @@ function ProductPicker({
   };
 
   const updateProductChecked = (product) => {
-    // check the products which are checked
+    // Toggle the 'checked' status of a product and its variants
     const productsListCopy = [...productsList];
     const updatedProductList = productsListCopy.map((p) => {
       if (p.id === product.id) {
@@ -82,26 +84,26 @@ function ProductPicker({
     });
     setProductsList(updatedProductList);
 
-    // add to the selectedProducts
+    // Add or remove product from selectedProducts list
     const selectedProductsCopy = [...selectedProducts];
     const isProductExisting = selectedProductsCopy.some(
       (p) => p.id === product.id
     );
 
-    // if product is existing ,then delete from selectedproducts
+    // If product is already selected, remove it from selectedProducts
     if (isProductExisting) {
       const updatedSelectedProducts = selectedProductsCopy.filter(
         (p) => p.id !== product.id
       );
       setSelectedProducts(updatedSelectedProducts);
     } else {
-      // if product is not existing ,then add to the selectedproducts
+      // Otherwise, add it to selectedProducts
       setSelectedProducts((prev) => [...prev, product]);
     }
   };
 
   const updateVariantChecked = (variant, product) => {
-    // update checked products
+    // Update the checked status of a variant within a product
     const productListCopy = [...productsList];
     const updatedProductListCopy = productListCopy.map((p) => {
       if (p.id === product.id) {
@@ -122,7 +124,8 @@ function ProductPicker({
         return p;
       }
     });
-    // update parent checkbox as per childs
+
+    // Update the parent product checkbox based on its variants
     const updatedProductList = updatedProductListCopy.map((p) => {
       if (p.id === product.id) {
         const anyVariantChecked = p.variants.some((v) => v.checked === true);
@@ -143,7 +146,7 @@ function ProductPicker({
     });
     setProductsList(updatedProductList);
 
-    // add to the selected products
+    // Update the selectedProducts list based on variant selection
     const selectedProductsCopy = [...selectedProducts];
 
     // check if product is existing in selectedProducts
@@ -200,6 +203,7 @@ function ProductPicker({
     setSelectedProducts(updatedSelectedProducts);
   };
 
+  // Debounce function to delay search requests
   const debounceSearch = (callback, delay) => {
     let timer;
     return function (...args) {
@@ -208,6 +212,7 @@ function ProductPicker({
     };
   };
 
+  // Handle search input change
   const handleSearch = (value) => {
     setSearchText(value);
     setPageNumber(0);
@@ -216,14 +221,17 @@ function ProductPicker({
     !isLoading && fetchData(value, 0);
   };
 
+  // Create a debounced version of the search handler
   const debouncedSearch = debounceSearch(handleSearch, 500);
 
+  // Handle infinite scroll event
   const handleScroll = () => {
     const productPicker = document.getElementById("product_picker");
     const scrollTop = productPicker.scrollTop;
     const clientHeight = productPicker.clientHeight;
     const scrollHeight = productPicker.scrollHeight;
 
+    // Load more products if scrolled to the bottom
     if (scrollTop + clientHeight >= scrollHeight) {
       !isLoading && hasMoreData && fetchData(searchText, pageNumber);
     }

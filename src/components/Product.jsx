@@ -26,6 +26,7 @@ function Product({
   const [variantsExpanded, setVariantsExpanded] = useState(false);
   const [draggedSubIndex, setDraggedSubIndex] = useState(null);
 
+  // Function to update discount value of a product
   const updateDiscount = (product, value) => {
     const list = [...addedProducts];
     const newList = list.map((p) => {
@@ -36,6 +37,7 @@ function Product({
     setAddedProducts(newList);
   };
 
+  // Function to update discount type (percent/flat) of a product
   const updateDiscountType = (product, value) => {
     const list = [...addedProducts];
     const newList = list.map((p) => {
@@ -46,6 +48,7 @@ function Product({
     setAddedProducts(newList);
   };
 
+  // Function to apply a discount to the product
   const handleDiscount = (product) => {
     const list = [...addedProducts];
     const updatedList = list.map((p) => {
@@ -63,6 +66,7 @@ function Product({
     setAddedProducts(updatedList);
   };
 
+  // Function to remove a product from the added products list
   const handleDelete = (product) => {
     const addedProductsCopy = [...addedProducts];
     const updatedAddedProducts = addedProductsCopy.filter(
@@ -76,10 +80,7 @@ function Product({
       <div className="flex items-center mt-8 mb-4 gap-1 sm:gap-2 font-normal text-sm text-[#000000CC]">
         <img src={dots} width={7} height={14} alt="dots" />
         <div>{order}.</div>
-        <div
-          // className="border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] w-[215px] h-8 flex justify-between items-center py-[7px] px-[10px] bg-white "
-          className="border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] w-52 h-8 flex justify-between items-center py-1.5 px-2.5 bg-white "
-        >
+        <div className="border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] w-52 h-8 flex justify-between items-center py-1.5 px-2.5 bg-white ">
           <div
             className={product.title ? "text-[#000000CC]" : "text-[#00000080]"}
           >
