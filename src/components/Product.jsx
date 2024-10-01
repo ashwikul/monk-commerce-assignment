@@ -157,6 +157,7 @@ function Product({
             selectedProducts={selectedProducts}
             setSelectedProducts={setSelectedProducts}
             addProduct={addProduct}
+            addedProducts={addedProducts}
           />
         )}
       </div>

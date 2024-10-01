@@ -9,6 +9,7 @@ function ProductPicker({
   selectedProducts,
   setSelectedProducts,
   addProduct,
+  addedProducts,
 }) {
   const apiKey = process.env.REACT_APP_API_KEY;
   const [productsList, setProductsList] = useState([]);
@@ -41,6 +42,18 @@ function ProductPicker({
         },
       });
       const data = await res.json();
+      console.log("added products", addedProducts);
+
+      let updatedProductList;
+      // exclude the product list
+      if (data) {
+        updatedProductList = data.filter((p) => {
+          if (addedProducts.some((product) => product.id == p.id)) {
+            return false;
+          }
+          return true;
+        });
+      }
 
       // Handle no data found case for the initial page
       if (!data && pageNumber === 0) {
@@ -58,7 +71,8 @@ function ProductPicker({
       }
       setHasMoreData(true);
       setPageNumber((prev) => prev + 1);
-      setProductsList((prev) => [...prev, ...data]);
+      // setProductsList((prev) => [...prev, ...data]);
+      setProductsList((prev) => [...prev, ...updatedProductList]);
     } catch (error) {
       console.log("Error while fetching products", error.message);
     } finally {
@@ -280,7 +294,7 @@ function ProductPicker({
           </div>
         </nav>
         <div
-          className="flex-grow overflow-auto h-screen"
+          className="flex-grow overflow-auto "
           id="product_picker"
           onScroll={handleScroll}
         >
