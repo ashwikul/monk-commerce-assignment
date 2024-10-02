@@ -26,6 +26,9 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
       });
     }
 
+    if (updatedAddedProdusts.length === 0) {
+      return setAddedProducts([{}]);
+    }
     setAddedProducts(updatedAddedProdusts);
   };
 
