@@ -44,17 +44,6 @@ function ProductPicker({
       const data = await res.json();
       console.log("added products", addedProducts);
 
-      let updatedProductList;
-      // exclude the product list
-      if (data) {
-        updatedProductList = data.filter((p) => {
-          if (addedProducts.some((product) => product.id == p.id)) {
-            return false;
-          }
-          return true;
-        });
-      }
-
       // Handle no data found case for the initial page
       if (!data && pageNumber === 0) {
         setProductsList([]);
@@ -69,6 +58,15 @@ function ProductPicker({
         setIsLoading(false);
         return;
       }
+
+      // exclude the product list
+      const updatedProductList = data.filter((p) => {
+        if (addedProducts.some((product) => product.id == p.id)) {
+          return false;
+        }
+        return true;
+      });
+
       setHasMoreData(true);
       setPageNumber((prev) => prev + 1);
       // setProductsList((prev) => [...prev, ...data]);

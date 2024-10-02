@@ -9,14 +9,23 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
       (p, i) => p.id === product.id && i === index
     ).variants;
     const updatedVariantList = variantList.filter((v) => v.id !== variant.id);
-    const updatedAddedProdusts = addedProductsCopy.map((p, i) => {
-      if (p.id === product.id && index === i) {
-        return {
-          ...p,
-          variants: updatedVariantList,
-        };
-      } else return p;
-    });
+
+    let updatedAddedProdusts;
+    if (updatedVariantList.length === 0) {
+      updatedAddedProdusts = addedProductsCopy.filter(
+        (p, i) => p.id !== product.id
+      );
+    } else {
+      updatedAddedProdusts = addedProductsCopy.map((p, i) => {
+        if (p.id === product.id && index === i) {
+          return {
+            ...p,
+            variants: updatedVariantList,
+          };
+        } else return p;
+      });
+    }
+
     setAddedProducts(updatedAddedProdusts);
   };
 
