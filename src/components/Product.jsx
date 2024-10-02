@@ -126,16 +126,6 @@ function Product({
                 flat off
               </option>
             </select>
-            {addedProducts.length > 1 && (
-              <img
-                src={close}
-                alt="close"
-                width={11.67}
-                height={11.67}
-                onClick={() => handleDelete(product, index)}
-                className="cursor-pointer"
-              />
-            )}
           </div>
         ) : (
           <button
@@ -149,6 +139,16 @@ function Product({
           >
             Add Discount
           </button>
+        )}
+        {addedProducts.length > 1 && (
+          <img
+            src={close}
+            alt="close"
+            width={11.67}
+            height={11.67}
+            onClick={() => handleDelete(product, index)}
+            className="cursor-pointer"
+          />
         )}
         {productPicker && (
           <ProductPicker
