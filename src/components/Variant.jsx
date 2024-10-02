@@ -66,17 +66,32 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
     setAddedProducts(newList);
   };
 
+  const handleDiscount = (product, variant) => {
+    const list = [...addedProducts];
+    const newList = list.map((p, i) => {
+      if (product.id === p.id) {
+        return {
+          ...p,
+          variants: p.variants.map((v) => {
+            if (v.id === variant.id) {
+              return { ...v, discountApplied: true };
+            } else return v;
+          }),
+        };
+      } else return p;
+    });
+    setAddedProducts(newList);
+  };
+
   return (
     <div className="flex items-center my-8 gap-2 font-normal text-sm text-[#000000CC]">
       <img src={dots} width={7} height={14} alt="dots" />
       <div
-        className={`border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] h-8 flex justify-between items-center py-[7px] px-[10px] rounded-[30px] ${
-          product.discountApplied ? "w-44" : "w-full"
-        }  `}
+        className={`border border-[#00000012] shadow-[0px_2px_4px_0px_#0000001A] h-8 flex justify-between items-center py-[7px] px-[10px] rounded-[30px] w-44 `}
       >
         <div>{variant.title || "Select Product"}</div>
       </div>
-      {product.discountApplied && (
+      {variant.discountApplied ? (
         <div className=" h-8 flex gap-1">
           <input
             type="number"
@@ -97,6 +112,18 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
             <option value="flat">flat off</option>
           </select>
         </div>
+      ) : (
+        <button
+          className={`border-2 w-28 sm:w-36 h-8 rounded text-sm font-semibold ${
+            product.id
+              ? "border-[#008060] bg-[#008060] text-white"
+              : "border-gray-300 bg-gray-200 text-gray-500 cursor-not-allowed"
+          }`}
+          onClick={() => handleDiscount(product, variant)}
+          disabled={!product.id}
+        >
+          Add Discount
+        </button>
       )}
       <img
         src={close}

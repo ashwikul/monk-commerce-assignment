@@ -42,7 +42,6 @@ function ProductPicker({
         },
       });
       const data = await res.json();
-      console.log("added products", addedProducts);
 
       // Handle no data found case for the initial page
       if (!data && pageNumber === 0) {
