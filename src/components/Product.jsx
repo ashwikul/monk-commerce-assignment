@@ -27,10 +27,10 @@ function Product({
   const [draggedSubIndex, setDraggedSubIndex] = useState(null);
 
   // Function to update discount value of a product
-  const updateDiscount = (product, value, index) => {
+  const updateDiscount = (product, value) => {
     const list = [...addedProducts];
-    const newList = list.map((p, i) => {
-      if (product.id === p.id && i === index) {
+    const newList = list.map((p) => {
+      if (product.id === p.id) {
         return { ...p, discount: value };
       } else return p;
     });
@@ -38,10 +38,10 @@ function Product({
   };
 
   // Function to update discount type (percent/flat) of a product
-  const updateDiscountType = (product, value, index) => {
+  const updateDiscountType = (product, value) => {
     const list = [...addedProducts];
-    const newList = list.map((p, i) => {
-      if (p.id === product.id && index === i) {
+    const newList = list.map((p) => {
+      if (p.id === product.id) {
         return { ...p, discountType: value };
       } else return p;
     });
@@ -49,11 +49,11 @@ function Product({
   };
 
   // Function to apply a discount to the product
-  const handleDiscount = (product, index) => {
+  const handleDiscount = (product) => {
     const list = [...addedProducts];
-    const updatedList = list.map((p, i) => {
+    const updatedList = list.map((p) => {
       if (p.id) {
-        if (p.id === product.id && i === index) {
+        if (p.id === product.id) {
           return {
             ...p,
             discountApplied: true,
@@ -67,11 +67,13 @@ function Product({
   };
 
   // Function to remove a product from the added products list
-  const handleDelete = (product, index) => {
+  const handleDelete = (index) => {
     const addedProductsCopy = [...addedProducts];
 
     addedProductsCopy.splice(index, 1);
     setAddedProducts(addedProductsCopy);
+
+    setVariantsExpanded(false);
   };
 
   return (
@@ -103,7 +105,7 @@ function Product({
             <input
               type="number"
               className="w-12 sm:w-16 h-8 border border-[#0000001A] bg-white shadow-[0px_2px_4px_0px_#0000001A] pl-3"
-              value={product.discount || " "}
+              value={product.discount || ""}
               onChange={(e) => updateDiscount(product, e.target.value, index)}
             ></input>
             <select
@@ -146,7 +148,7 @@ function Product({
             alt="close"
             width={11.67}
             height={11.67}
-            onClick={() => handleDelete(product, index)}
+            onClick={() => handleDelete(index)}
             className="cursor-pointer"
           />
         )}
@@ -211,7 +213,7 @@ function Product({
             >
               <Variant
                 key={variant.id}
-                index={index}
+                index={i}
                 variant={variant}
                 product={product}
                 addedProducts={addedProducts}

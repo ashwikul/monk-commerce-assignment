@@ -3,24 +3,23 @@ import dots from "../assets/dots.svg";
 import close from "../assets/close.svg";
 
 function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
-  const handleDelete = (product, variant, index) => {
+  const handleDelete = (product, index) => {
     const addedProductsCopy = [...addedProducts];
     const variantList = addedProductsCopy.find(
-      (p, i) => p.id === product.id && i === index
+      (p) => p.id === product.id
     ).variants;
-    const updatedVariantList = variantList.filter((v) => v.id !== variant.id);
-
+    variantList.splice(index, 1);
     let updatedAddedProdusts;
-    if (updatedVariantList.length === 0) {
+    if (variantList.length === 0) {
       updatedAddedProdusts = addedProductsCopy.filter(
-        (p, i) => p.id !== product.id
+        (p) => p.id !== product.id
       );
     } else {
-      updatedAddedProdusts = addedProductsCopy.map((p, i) => {
-        if (p.id === product.id && index === i) {
+      updatedAddedProdusts = addedProductsCopy.map((p) => {
+        if (p.id === product.id) {
           return {
             ...p,
-            variants: updatedVariantList,
+            variants: variantList,
           };
         } else return p;
       });
@@ -32,10 +31,10 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
     setAddedProducts(updatedAddedProdusts);
   };
 
-  const updateDiscount = (product, variant, value, index) => {
+  const updateDiscount = (product, variant, value) => {
     const list = [...addedProducts];
-    const newList = list.map((p, i) => {
-      if (product.id === p.id && index === i) {
+    const newList = list.map((p) => {
+      if (product.id === p.id) {
         return {
           ...p,
           variants: p.variants.map((v) => {
@@ -49,10 +48,10 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
     setAddedProducts(newList);
   };
 
-  const updateDiscountType = (product, variant, value, index) => {
+  const updateDiscountType = (product, variant, value) => {
     const list = [...addedProducts];
-    const newList = list.map((p, i) => {
-      if (product.id === p.id && index === i) {
+    const newList = list.map((p) => {
+      if (product.id === p.id) {
         return {
           ...p,
           variants: p.variants.map((v) => {
@@ -68,7 +67,7 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
 
   const handleDiscount = (product, variant) => {
     const list = [...addedProducts];
-    const newList = list.map((p, i) => {
+    const newList = list.map((p) => {
       if (product.id === p.id) {
         return {
           ...p,
@@ -96,15 +95,13 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
           <input
             type="number"
             className="w-12 sm:w-16 h-8 border border-[#0000001A] rounded-[30px] shadow-[0px_2px_4px_0px_#0000001A] pl-4"
-            value={variant.discount || " "}
-            onChange={(e) =>
-              updateDiscount(product, variant, e.target.value, index)
-            }
+            value={variant.discount || ""}
+            onChange={(e) => updateDiscount(product, variant, e.target.value)}
           ></input>
           <select
             className="w-16 sm:w-24 h-8 border border-[#0000001A] rounded-[30px] shadow-[0px_2px_4px_0px_#0000001A] px-1 sm:px-3"
             onChange={(e) =>
-              updateDiscountType(product, variant, e.target.value, index)
+              updateDiscountType(product, variant, e.target.value)
             }
             value={variant.discountType || "percent"}
           >
@@ -131,7 +128,7 @@ function Variant({ index, variant, product, addedProducts, setAddedProducts }) {
         className="cursor-pointer"
         width={11.67}
         height={11.67}
-        onClick={() => handleDelete(product, variant, index)}
+        onClick={() => handleDelete(product, index)}
       />
     </div>
   );
